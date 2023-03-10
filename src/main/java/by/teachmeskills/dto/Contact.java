@@ -1,4 +1,4 @@
-package by.teachmeskills.util;
+package by.teachmeskills.dto;
 
 import com.github.javafaker.Faker;
 

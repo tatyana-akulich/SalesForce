@@ -8,7 +8,7 @@ public class Input {
     private WebDriver driver;
     private String inputLabel;
 
-    private static final String INPUT_ACCOUNT_LOCATOR = "//span[text()='%s']//ancestor::div[@class='slds-form-element__control']//input";
+    public static final String INPUT_ACCOUNT_LOCATOR = "//span[text()='%s']//ancestor::div[@class='slds-form-element__control']//input";
     private static final String INPUT_CONTACT_LOCATOR = "//label[text()='%s']//ancestor::lightning-input//input";
 
     public Input(WebDriver driver, String inputLabel) {

@@ -1,17 +1,25 @@
 package by.teachmeskills.page;
 
 import by.teachmeskills.BasePage;
-import by.teachmeskills.util.Contact;
+import by.teachmeskills.dto.Contact;
 import by.teachmeskills.wrapper.Input;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class NewContactModalPage extends BasePage {
     private static final By ACCOUNT_NAME_LOCATOR = By.xpath("//label[text()='Account Name']//ancestor::lightning-grouped-combobox//input");
     private static final By SAVE_BUTTON = By.xpath("//button[text()='Save']");
+    private static final By LOCATOR_FOR_WAITER = By.xpath("//label[text()='Description']");
 
     public NewContactModalPage(WebDriver driver) {
         super(driver);
+    }
+
+    @Override
+    protected NewContactModalPage waitForPageOpening() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(LOCATOR_FOR_WAITER));
+        return this;
     }
 
     public void fillInContactInformation(Contact contact) {
