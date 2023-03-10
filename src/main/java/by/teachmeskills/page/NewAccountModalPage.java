@@ -27,7 +27,7 @@ public class NewAccountModalPage extends BasePage {
         new Input(driver, "Fax").fillInAccount(account.getFax());
         new Input(driver, "Phone").fillInAccount(account.getPhone());
         new Input(driver, "Website").fillInAccount(account.getWebsite());
-        new Combobox(driver, "Parent Account").fillIn(account.getParentAccount());
+        new Combobox(driver, "Parent Account").fillInAccount(account.getParentAccount());
 
         driver.findElement(SAVE_BUTTON).click();
     }
