@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 @EqualsAndHashCode
 @Builder
+
 public class Contact {
     private String salutation;
     private String firstName;

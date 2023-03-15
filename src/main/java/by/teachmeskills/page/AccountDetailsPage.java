@@ -20,6 +20,7 @@ public class AccountDetailsPage extends BasePage {
     }
 
     public Account getAccount() {
+
         return Account.builder()
                 .name(driver.findElement(ACCOUNT_NAME_LOCATOR).getText())
                 .fax(driver.findElement(By.xpath(String.format(ITEM_LOCATOR, "Fax"))).getText())

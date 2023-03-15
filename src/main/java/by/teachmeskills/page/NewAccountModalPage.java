@@ -26,6 +26,7 @@ public class NewAccountModalPage extends BasePage {
     }
 
     public NewAccountModalPage fillInAccountInformation(Account account) {
+
         new Input(driver, "Account Name").fillInAccount(account.getName());
         new Input(driver, "Fax").fillInAccount(account.getFax());
         new Input(driver, "Phone").fillInAccount(account.getPhone());

@@ -27,6 +27,7 @@ public class BaseTest {
         prefs.put("profile.default_content_setting_values.notifications", 2); //turn off notifications
         options.setExperimentalOption("prefs", prefs);
         options.addArguments("--remote-allow-origins=*");
+
         driver = new ChromeDriver(options);
 
         driver.manage().window().maximize();

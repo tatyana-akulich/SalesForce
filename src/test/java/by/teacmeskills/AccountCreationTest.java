@@ -25,6 +25,7 @@ public class AccountCreationTest extends BaseTest {
 
     @BeforeMethod(alwaysRun = true)
     public void createAccount() {
+
         testAccount = Account.builder().name(new Faker().name().fullName())
                 .fax(new Faker().phoneNumber().phoneNumber())
                 .phone(new Faker().phoneNumber().cellPhone())
@@ -43,6 +44,7 @@ public class AccountCreationTest extends BaseTest {
                 .waitForPageOpening()
                 .createNewAccount();
 
+
         NewAccountModalPage modalPage = new NewAccountModalPage(driver)
                 .fillInAccountInformation(testAccount);
         WebElement alert = modalPage.getAlert();
@@ -53,6 +55,7 @@ public class AccountCreationTest extends BaseTest {
                 .isTrue();
 
         WebElement alertText = modalPage.getAlertText();
+
         assertThat(alertText.getText())
                 .as("Alert message should include account name")
                 .contains(testAccount.getName());
@@ -61,10 +64,10 @@ public class AccountCreationTest extends BaseTest {
                 .as("Saved account information should be equal to entered")
                 .isEqualTo(new AccountDetailsPage(driver).getAccount());
 
-
         AccountsPage accountsPage = new AccountsPage(driver).open()
                 .waitForPageOpening();
         List<String> names = accountsPage.getNamesOfAccounts();
+
         assertThat(names)
                 .as("Account name should be in the list of names")
                 .contains(testAccount.getName());
@@ -72,6 +75,7 @@ public class AccountCreationTest extends BaseTest {
         accountsPage.deleteAccount(testAccount.getName());
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h2[text()='Delete Account']")));
         WebElement messageDelete = accountsPage.getDeleteMessage();
+
         assertThat(messageDelete.isDisplayed())
                 .as("Alert message should be displayed")
                 .isTrue();
@@ -80,16 +84,19 @@ public class AccountCreationTest extends BaseTest {
         ((JavascriptExecutor) driver).executeScript("document.querySelector('[title=\"Delete\"]').click();");
 
         alert = accountsPage.getAlert();
+
         assertThat(alert.isDisplayed())
                 .as("Alert message should be displayed")
                 .isTrue();
 
         alertText = accountsPage.getAlertText();
+
         assertThat(alertText.getText())
                 .as("Alert message should include account name")
                 .contains(testAccount.getName());
 
         names = accountsPage.getNamesOfAccounts();
+
         assertThat(names)
                 .as("Account name shouldn't be in the list of names, account was deleted")
                 .doesNotContain(testAccount.getName());
