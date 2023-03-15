@@ -9,7 +9,9 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
+import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 public class AccountsPage extends BasePage {
 
@@ -19,6 +21,10 @@ public class AccountsPage extends BasePage {
     private WebElement NEW_BTN_LOCATOR;
     private static final String ITEM_EDIT_LOCATOR = "//a[@title='%s']//ancestor::tr//td//a[@role='button']";
     private static final By DELETE_BUTTON = By.xpath("//a[@title='Delete']");
+    private static final By ACCOUNT_NAMES_LOCATOR = By.xpath("//a[@data-refid = 'recordId']");
+    private static final By ALERT_WINDOW = NewAccountModalPage.ALERT_WINDOW;
+    private static final By ALERT_TEXT = NewAccountModalPage.ALERT_TEXT;
+    private static final By DELETE_CONFIRMATION = By.xpath("//h2[text()='Delete Account']");
 
     public AccountsPage(WebDriver driver) {
         super(driver);
@@ -46,5 +52,24 @@ public class AccountsPage extends BasePage {
         driver.findElement(By.xpath(String.format(ITEM_EDIT_LOCATOR, name))).click();
         driver.findElement(DELETE_BUTTON).click();
         return this;
+    }
+
+    public List<String> getNamesOfAccounts() {
+        List<WebElement> accounts = driver.findElements(ACCOUNT_NAMES_LOCATOR);
+        return accounts.stream()
+                .map(element -> element.getAttribute("title"))
+                .collect(Collectors.toList());
+    }
+
+    public WebElement getAlert() {
+        return driver.findElement(ALERT_WINDOW);
+    }
+
+    public WebElement getAlertText() {
+        return driver.findElement(ALERT_TEXT);
+    }
+
+    public WebElement getDeleteMessage() {
+        return driver.findElement(DELETE_CONFIRMATION);
     }
 }

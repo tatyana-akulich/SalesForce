@@ -4,6 +4,7 @@ import by.teachmeskills.dto.Contact;
 import by.teachmeskills.page.ContactsPage;
 import by.teachmeskills.page.LoginPage;
 import by.teachmeskills.page.NewContactModalPage;
+import com.github.javafaker.Faker;
 import org.assertj.core.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -19,7 +20,17 @@ public class ContactsCreationTest extends BaseTest {
 
     @BeforeClass
     public void addContact() {
-        testContact = new Contact();
+        testContact = Contact.builder()
+                .salutation("Проф.")
+                .firstName(new Faker().name().firstName())
+                .lastName(new Faker().name().lastName())
+                .title("Professor")
+                .accountName("Emelina Jerde II")
+                .phone(new Faker().phoneNumber().phoneNumber())
+                .mobile(new Faker().phoneNumber().cellPhone())
+                .email(new Faker().internet().emailAddress())
+                .reportsTo("Alex Forest")
+                .build();
     }
 
     @Test

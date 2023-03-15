@@ -20,10 +20,13 @@ public class AccountDetailsPage extends BasePage {
     }
 
     public Account getAccount() {
-        return new Account(driver.findElement(ACCOUNT_NAME_LOCATOR).getText(),
-                driver.findElement(By.xpath(String.format(ITEM_LOCATOR, "Fax"))).getText(),
-                driver.findElement(By.xpath(String.format(ITEM_LOCATOR, "Phone"))).getText(),
-                driver.findElement(By.xpath(String.format(ITEM_LOCATOR, "Website"))).getText(),
-                driver.findElement(By.xpath(String.format(ITEM_LOCATOR + "//span", "Parent Account"))).getText());
+
+        return Account.builder()
+                .name(driver.findElement(ACCOUNT_NAME_LOCATOR).getText())
+                .fax(driver.findElement(By.xpath(String.format(ITEM_LOCATOR, "Fax"))).getText())
+                .phone(driver.findElement(By.xpath(String.format(ITEM_LOCATOR, "Phone"))).getText())
+                .website(driver.findElement(By.xpath(String.format(ITEM_LOCATOR, "Website"))).getText())
+                .parentAccount(driver.findElement(By.xpath(String.format(ITEM_LOCATOR + "//span", "Parent Account"))).getText())
+                .build();
     }
 }

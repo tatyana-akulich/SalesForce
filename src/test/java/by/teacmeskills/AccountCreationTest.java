@@ -5,6 +5,7 @@ import by.teachmeskills.page.AccountDetailsPage;
 import by.teachmeskills.page.AccountsPage;
 import by.teachmeskills.page.LoginPage;
 import by.teachmeskills.page.NewAccountModalPage;
+import com.github.javafaker.Faker;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
@@ -15,7 +16,6 @@ import org.testng.annotations.Test;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,7 +25,13 @@ public class AccountCreationTest extends BaseTest {
 
     @BeforeMethod(alwaysRun = true)
     public void createAccount() {
-        testAccount = new Account();
+
+        testAccount = Account.builder().name(new Faker().name().fullName())
+                .fax(new Faker().phoneNumber().phoneNumber())
+                .phone(new Faker().phoneNumber().cellPhone())
+                .website(new Faker().internet().domainName())
+                .parentAccount("Concetta Walker")
+                .build();
     }
 
     @Test
@@ -38,15 +44,18 @@ public class AccountCreationTest extends BaseTest {
                 .waitForPageOpening()
                 .createNewAccount();
 
-        new NewAccountModalPage(driver).fillInAccountInformation(testAccount);
 
-        WebElement alert = driver.findElement(By.xpath("//div[@role='alertdialog']"));
+        NewAccountModalPage modalPage = new NewAccountModalPage(driver)
+                .fillInAccountInformation(testAccount);
+        WebElement alert = modalPage.getAlert();
+
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@role='alertdialog']")));
         assertThat(alert.isDisplayed())
                 .as("Alert message should be displayed")
                 .isTrue();
 
-        WebElement alertText = driver.findElement(By.xpath("//span[@data-aura-class = 'forceActionsText']"));
+        WebElement alertText = modalPage.getAlertText();
+
         assertThat(alertText.getText())
                 .as("Alert message should include account name")
                 .contains(testAccount.getName());
@@ -55,22 +64,18 @@ public class AccountCreationTest extends BaseTest {
                 .as("Saved account information should be equal to entered")
                 .isEqualTo(new AccountDetailsPage(driver).getAccount());
 
-        new AccountsPage(driver).open()
+        AccountsPage accountsPage = new AccountsPage(driver).open()
                 .waitForPageOpening();
-        List<WebElement> accounts = driver.findElements(By.xpath("//a[@data-refid = 'recordId']"));
-        List<String> names = accounts.stream()
-                .map(element -> element.getAttribute("title"))
-                .collect(Collectors.toList());
+        List<String> names = accountsPage.getNamesOfAccounts();
+
         assertThat(names)
                 .as("Account name should be in the list of names")
                 .contains(testAccount.getName());
 
-        new AccountsPage(driver).open()
-                .waitForPageOpening()
-                .deleteAccount(testAccount.getName());
-
+        accountsPage.deleteAccount(testAccount.getName());
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h2[text()='Delete Account']")));
-        WebElement messageDelete = driver.findElement(By.xpath("//h2[text()='Delete Account']"));
+        WebElement messageDelete = accountsPage.getDeleteMessage();
+
         assertThat(messageDelete.isDisplayed())
                 .as("Alert message should be displayed")
                 .isTrue();
@@ -78,20 +83,20 @@ public class AccountCreationTest extends BaseTest {
         ((JavascriptExecutor) driver).executeScript("document.querySelector('[title=\"Delete\"]').focus();");
         ((JavascriptExecutor) driver).executeScript("document.querySelector('[title=\"Delete\"]').click();");
 
-        alert = driver.findElement(By.xpath("//div[@role='alertdialog']"));
+        alert = accountsPage.getAlert();
+
         assertThat(alert.isDisplayed())
                 .as("Alert message should be displayed")
                 .isTrue();
 
-        alertText = driver.findElement(By.xpath("//span[@data-aura-class = 'forceActionsText']"));
+        alertText = accountsPage.getAlertText();
+
         assertThat(alertText.getText())
                 .as("Alert message should include account name")
                 .contains(testAccount.getName());
 
-        accounts = driver.findElements(By.xpath("//a[@data-refid = 'recordId']"));
-        names = accounts.stream()
-                .map(element -> element.getAttribute("title"))
-                .collect(Collectors.toList());
+        names = accountsPage.getNamesOfAccounts();
+
         assertThat(names)
                 .as("Account name shouldn't be in the list of names, account was deleted")
                 .doesNotContain(testAccount.getName());
